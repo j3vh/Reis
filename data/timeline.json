@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "file": "media/IMG_1135.jpeg",
+    "type": "photo",
+    "lat": 57.723575000000004,
+    "lon": -3.278625,
+    "timestamp": "2026-08-19T09:57:08",
+    "duration_ms": null,
+    "position_source": "metadata"
+  },
+  {
+    "file": "media/IMG_1197.jpeg",
+    "type": "photo",
+    "lat": 57.017975,
+    "lon": -2.085963888888889,
+    "timestamp": "2026-08-20T18:34:00",
+    "duration_ms": null,
+    "position_source": "metadata"
+  },
+  {
+    "file": "media/IMG_1252.jpeg",
+    "type": "photo",
+    "lat": 55.67044166666666,
+    "lon": -1.753225,
+    "timestamp": "2026-08-22T17:46:20",
+    "duration_ms": null,
+    "position_source": "metadata"
+  },
+  {
+    "file": "media/IMG_1259.jpeg",
+    "type": "photo",
+    "lat": 55.65967222222222,
+    "lon": -1.7807555555555554,
+    "timestamp": "2026-08-22T18:08:08",
+    "duration_ms": null,
+    "position_source": "metadata"
+  }
+]
