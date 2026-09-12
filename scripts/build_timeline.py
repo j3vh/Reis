@@ -12,7 +12,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from fractions import Fraction
 
 from PIL import Image, ExifTags
@@ -33,7 +33,6 @@ PHOTO_EXTS = {".jpg", ".jpeg", ".png", ".heic", ".heif"}
 VIDEO_EXTS = {".mp4", ".mov", ".m4v", ".avi", ".mkv"}
 
 EXIF_TAGS = {v: k for k, v in ExifTags.TAGS.items()}
-GPS_TAGS = {v: k for k, v in ExifTags.GPSTAGS.items()}
 
 
 def load_overrides():
@@ -60,7 +59,8 @@ def read_photo_metadata(path):
             if not exif:
                 return lat, lon, timestamp
 
-            date_str = exif.get(EXIF_TAGS.get("DateTimeOriginal"))
+            exif_ifd = exif.get_ifd(ExifTags.IFD.Exif)
+            date_str = exif_ifd.get(EXIF_TAGS.get("DateTimeOriginal"))
             if not date_str:
                 date_str = exif.get(EXIF_TAGS.get("DateTime"))
             if date_str:
@@ -70,9 +70,9 @@ def read_photo_metadata(path):
                 except ValueError:
                     pass
 
-            gps_info = exif.get_ifd(EXIF_TAGS.get("GPSInfo"))
+            gps_info = exif.get_ifd(ExifTags.IFD.GPSInfo)
             if gps_info:
-                gps = {GPS_TAGS.get(k, k): v for k, v in gps_info.items()}
+                gps = {ExifTags.GPSTAGS.get(k, k): v for k, v in gps_info.items()}
                 if "GPSLatitude" in gps and "GPSLongitude" in gps:
                     lat = dms_to_decimal(gps["GPSLatitude"], gps.get("GPSLatitudeRef", "N"))
                     lon = dms_to_decimal(gps["GPSLongitude"], gps.get("GPSLongitudeRef", "E"))
@@ -120,7 +120,8 @@ def read_video_metadata(path):
         if creation_time:
             try:
                 dt = datetime.fromisoformat(creation_time.replace("Z", "+00:00"))
-                timestamp = dt.isoformat()
+                # Naar naive tijd, consistent met de tijdloze EXIF-tijdstempels van foto's.
+                timestamp = dt.replace(tzinfo=None).isoformat()
             except ValueError:
                 pass
 
@@ -202,7 +203,7 @@ def build():
 
         if not timestamp:
             mtime = os.path.getmtime(path)
-            timestamp = datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat()
+            timestamp = datetime.fromtimestamp(mtime).isoformat()
             print(f"  waarschuwing: geen tijdstip in {rel_path}, gebruik bestandsdatum")
 
         items.append(
