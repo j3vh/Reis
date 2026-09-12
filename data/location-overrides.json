@@ -1,0 +1,3 @@
+{
+  "_readme": "Zet hier handmatige locatie/tijd-correcties per bestandsnaam. Voorbeeld: \"IMG_1234.MOV\": { \"lat\": 55.95, \"lon\": -3.19, \"timestamp\": \"2026-07-04T14:30:00\" }"
+}

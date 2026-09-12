@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wachtwoord-hash genereren</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; max-width: 480px; margin: 3rem auto; padding: 0 1rem; }
+    input { width: 100%; padding: 0.5rem; font-size: 1rem; margin: 0.5rem 0; }
+    code { display: block; background: #eee; padding: 0.75rem; word-break: break-all; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Nieuw wachtwoord instellen</h1>
+  <p>Typ het gewenste wachtwoord, kopieer de hash eronder en plak die als <code>PASSWORD_HASH</code> in <code>gate.js</code>.</p>
+  <input type="text" id="pw" placeholder="Nieuw wachtwoord" />
+  <code id="out">&hellip;</code>
+  <script>
+    async function sha256(text) {
+      const data = new TextEncoder().encode(text);
+      const buf = await crypto.subtle.digest("SHA-256", data);
+      return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+    document.getElementById("pw").addEventListener("input", async (e) => {
+      document.getElementById("out").textContent = e.target.value ? await sha256(e.target.value) : "…";
+    });
+  </script>
+</body>
+</html>
